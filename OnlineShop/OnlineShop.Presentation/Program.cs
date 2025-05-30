@@ -1,4 +1,4 @@
-namespace OnlineShop.Presentation
+namespace onlineShop.Presentation
 {
     public class Program
     {
