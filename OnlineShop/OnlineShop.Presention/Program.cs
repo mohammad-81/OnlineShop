@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.Data.AppDbContext;
+
 namespace OnlineShop.Presention
 {
     public class Program
@@ -9,6 +12,8 @@ namespace OnlineShop.Presention
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDbContext<OnlineShopDBContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
