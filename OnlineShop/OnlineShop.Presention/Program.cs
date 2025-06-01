@@ -1,5 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
+using OnlineShop.Application.Services.Implements;
+using OnlineShop.Application.Services.Interfaces;
+using OnlineShop.Application.Services.Implements;
+
 using OnlineShop.Data.AppDbContext;
+using OnlineShop.Data.Repositories;
+using OnlineShop.Domain.IRepositories;
+
+
 
 namespace OnlineShop.Presention
 {
@@ -11,6 +20,10 @@ namespace OnlineShop.Presention
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<OnlineShopDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +54,7 @@ namespace OnlineShop.Presention
                     name: "Default",
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
+                endpoints.MapRazorPages();
             });
             app.Run();
         }
