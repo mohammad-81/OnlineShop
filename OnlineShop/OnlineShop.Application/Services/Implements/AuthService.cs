@@ -34,7 +34,7 @@ namespace OnlineShop.Application.Services.Implements
             var phoneExist =  await _userRepository.IsExistUserByMobile(model.Mobile);
             if (phoneExist)
             {
-                return new AuthResponseDto()
+                return new AuthResponseDto
                 {
                     Succeeded = false,
                     Message = "این شماره موبایل قبلا ثبت شده است .",
@@ -53,14 +53,14 @@ namespace OnlineShop.Application.Services.Implements
             {
                 await _userManeger.AddToRoleAsync(user, "User");
                 await _signInManager.SignInAsync(user,isPersistent: false);
-                return new AuthResponseDto()
+                return new AuthResponseDto
                 {
                     Succeeded= true,
                     Message=".با موفقیت ثبت نام  شدید ",
                 };
             }
 
-            return new AuthResponseDto()
+            return new AuthResponseDto
             {
                 Succeeded = false,
                 Errors = result.Errors.Select(e => e.Description),
@@ -72,19 +72,38 @@ namespace OnlineShop.Application.Services.Implements
         }
         public async Task<AuthResponseDto> LoginAsync(AuthLoginDto model)
         {
-            return new AuthResponseDto()
+            var user = await _userManeger.FindByNameAsync(model.Mobile);
+            if (user == null)
+            {
+                return new AuthResponseDto
+                {
+                    Succeeded = false,
+                    Message = "این شماره همراه وجود ندارد",
+
+                };
+            }
+            var result = await _signInManager.PasswordSignInAsync(user, model.password, isPersistent: false, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                new AuthResponseDto
+                {
+                    Succeeded = false,
+                    Message = "با موفقیت وارد شدید"
+                };
+            }
+
+            return new AuthResponseDto
             {
                 Succeeded = false,
-                Message = "عملیات ثبت نام با خطا مواجه شد ."
+                Message = "رمز عبور یا شماره تلفن صحیح نیست"
             };
             
         }
-        
 
 
-        public Task LogoutAsync()
+        public async Task LogoutAsync()
         {
-            throw new NotImplementedException();
+            await _signInManager.SignOutAsync();
         }
     }
 }
