@@ -10,8 +10,8 @@ namespace OnlineShop.Domain.IRepositories;
 public interface IUserRepository
 {
 
-    bool IsExistUserByMobile(string mobile);
-    void AddUser(User user);
-    void SaveChange();
+    Task <bool> IsExistUserByMobile(string mobile);
+    //void AddUser(User user);
+    //void SaveChange();
 
 }

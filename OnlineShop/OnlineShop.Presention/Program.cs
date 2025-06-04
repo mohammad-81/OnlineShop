@@ -7,6 +7,9 @@ using OnlineShop.Application.Services.Implements;
 using OnlineShop.Data.AppDbContext;
 using OnlineShop.Data.Repositories;
 using OnlineShop.Domain.IRepositories;
+using OnlineShop.Domain.Entitties;
+using OnlineShop.Domain.Entitties.Identity;
+using Microsoft.AspNetCore.Identity;
 
 
 
@@ -21,14 +24,43 @@ namespace OnlineShop.Presention
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService,AuthService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<OnlineShopDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            var app = builder.Build();
 
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 8;
+
+                options.User.RequireUniqueEmail = false;
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedAccount = false;
+
+            })
+            .AddEntityFrameworkStores<OnlineShopDBContext>()
+            .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {   options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.SlidingExpiration = true;
+            });
+
+            var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -42,6 +74,7 @@ namespace OnlineShop.Presention
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

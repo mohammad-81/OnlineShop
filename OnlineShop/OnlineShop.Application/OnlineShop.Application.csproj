@@ -15,4 +15,13 @@
     <Folder Include="DTOs\UserSide\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="DTOs\SiteSide\AuthDto\Auth.DTO.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

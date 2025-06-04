@@ -1,55 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.DTOs.SiteSide;
+using OnlineShop.Application.DTOs.SiteSide.AuthDto;
 using OnlineShop.Application.Services.Interfaces;
 
-namespace OnlineShop.Presention.Controllers
+namespace OnlineShop.Presention.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    #region ctor
+    private readonly IAuthService _authService ;
+    public AccountController(IAuthService authService)
     {
-        #region ctor
-        private readonly IUserService _userService;
-        public AccountController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        _authService = authService;
+    }
 
-        #endregion
+    #endregion
 
-        #region Register
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Register(UserRegisterDTO registerDTO)
+    [HttpGet]
+    public IActionResult Register()
+    {
+        return View(new AuthRegisterDto());
+    }
+
+    [HttpPost]
+    
+    [ValidateAntiForgeryToken] // حتماً برای فرم‌های POST اضافه کنید
+    public async Task<IActionResult> Register(AuthRegisterDto model)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            var result = await _authService.RegisterAsync(model);
+            if (result.Succeeded)
             {
-                _userService.RegisterUser(registerDTO);
+                TempData["SuccessMessage"] = "Registration successful! Please log in.";
                 return RedirectToAction("Index","Home");
             }
-            return View(registerDTO);
+
+            foreach (var error in result.Errors!) // Errors ممکن است null باشد
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
         }
-        #endregion
-
-        #region Login
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost,ValidateAntiForgeryToken]
-        public IActionResult Login(UserLoginDTO loginDTO)
-        {
-
-        }
-        #endregion
-
-        #region logOut
-        #endregion
+        return View(model);
     }
+   
+
 }

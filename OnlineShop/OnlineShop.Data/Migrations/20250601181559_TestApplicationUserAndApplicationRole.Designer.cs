@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShop.Data.AppDbContext;
 
@@ -11,9 +12,11 @@ using OnlineShop.Data.AppDbContext;
 namespace OnlineShop.Data.Migrations
 {
     [DbContext(typeof(OnlineShopDBContext))]
-    partial class OnlineShopDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250601181559_TestApplicationUserAndApplicationRole")]
+    partial class TestApplicationUserAndApplicationRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,9 +143,6 @@ namespace OnlineShop.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -152,9 +152,6 @@ namespace OnlineShop.Data.Migrations
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -233,29 +230,6 @@ namespace OnlineShop.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Name = "Admin",
-                            NormalizedName = "ADMIN",
-                            description = "مدیر سیستم"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Name = "User",
-                            NormalizedName = "USER",
-                            description = " کاربر عادی "
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Name = "Editor",
-                            NormalizedName = "EDITOR",
-                            description = "ویرایشگر محتوا"
-                        });
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entitties.User.User", b =>

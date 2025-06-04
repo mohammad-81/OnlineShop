@@ -1,9 +1,5 @@
-﻿@model OnlineShop.Application.DTOs.SiteSide.UserRegisterDTO
+﻿@model OnlineShop.Application.DTOs.SiteSide.AuthDto.AuthRegisterDto
 
-@{
-    ViewData["Title"] = "ثبت نام ";
-    Layout = null;
-}
 
 
 <!DOCTYPE html>
@@ -57,21 +53,21 @@
                                         <h4 class="card-title text-center" style="font-family: yekanBakhtRegular;">ثبت نام </h4>
                                         <form class="login-form mt-4" asp-controller="Account" asp-action="Register">
 
-
-                                            @if (User.Identity.IsAuthenticated && Context.Request.Query["ReturnUrl"] != "")
+                                            @if (User?.Identity != null && User.Identity.IsAuthenticated &&
+                                                                                        !string.IsNullOrEmpty(Context?.Request?.Query["ReturnUrl"].ToString()))
                                             {
                                                 <div class="alert alert-danger mt-3" style="font-family: yekanBakhtRegular;">
-                                                    <p>کاربر گرامی @User.Identity.Name  شما مجوز ورود به بخش درخواست شده را ندارید.</p>
+                                                    <p>کاربر گرامی @Model.Mobile شما مجوز ورود به بخش درخواست شده را ندارید.</p>
                                                 </div>
-
                                             }
 
+                                            <div asp-validation-summary="All" class="text-danger"></div>
 
                                             <div class="row">
 
                                                 <div class="col-md-12">
                                                     <div class="mb-3">
-                                                        <label class="form-label" style="font-family: yekanBakhtRegular;">موبایل شما <span class="text-danger">*</span></label>
+                                                        <label class="form-label" style="font-family: yekanBakhtRegular;"> @Model.Mobile موبایل شما <span class="text-danger">*</span></label>
                                                         <div class="form-icon position-relative">
                                                             <i data-feather="user" class="fea icon-sm icons"></i>
                                                             <input style="font-family: yekanBakhtRegular;" type="text" class="form-control ps-5  rounded-0" placeholder="موبایل" asp-for="Mobile" required="">
@@ -86,7 +82,7 @@
                                                         <label class="form-label" style="font-family: yekanBakhtRegular;">رمز عبور  <span class="text-danger">*</span></label>
                                                         <div class="form-icon position-relative">
                                                             <i data-feather="key" class="fea icon-sm icons"></i>
-                                                            <input style="font-family: yekanBakhtRegular;" type="password" class="form-control ps-5  rounded-0" asp-for="Password" placeholder="رمز عبور " required="">
+                                                            <input style="font-family: yekanBakhtRegular;" type="password" class="form-control ps-5  rounded-0" asp-for="Password" placeholder="رمز عبور  @Model.Password " required="">
                                                             <span style="color:red" asp-validation-for="Password"></span>
 
                                                         </div>
@@ -95,7 +91,7 @@
 
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
-                                                        <label class="form-label" style="font-family: yekanBakhtRegular;"> تکرار رمز عبور  <span class="text-danger">*</span></label>
+                                                        <label class="form-label" style="font-family: yekanBakhtRegular;"> @Model.Re_Password تکرار رمز عبور  <span class="text-danger">*</span></label>
                                                         <div class="form-icon position-relative">
                                                             <i data-feather="key" class="fea icon-sm icons"></i>
                                                             <input type="password" style="font-family: yekanBakhtRegular;" class="form-control ps-5  rounded-0" asp-for="Re_Password" placeholder="رمز عبور " required="">
