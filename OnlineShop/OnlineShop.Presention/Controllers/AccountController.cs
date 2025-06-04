@@ -17,7 +17,7 @@ public class AccountController : Controller
 
     #endregion
 
-
+    #region Register
     [HttpGet]
     public IActionResult Register()
     {
@@ -45,6 +45,57 @@ public class AccountController : Controller
         }
         return View(model);
     }
-   
+    #endregion
 
+    #region Login 
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Login(string? returnUrl) 
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(new AuthLoginDto());
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task <IActionResult> Login(AuthLoginDto model,string? returnUrl=null)
+    {
+        ViewData["ReturnUrl"]= returnUrl;
+        if (ModelState.IsValid) 
+        {
+            var result = await _authService.LoginAsync(model);
+            if (result.Succeeded)
+            {
+                if (Url.IsLocalUrl(returnUrl))
+                {
+                    Redirect(returnUrl);
+                }
+                RedirectToAction("Index", "Home");
+            }
+            foreach (var error in result.Errors!) { 
+                ModelState.AddModelError(string.Empty, error); 
+            }
+
+            if (result.Errors == null || !result.Errors.Any())
+            {
+                ModelState.AddModelError(string.Empty, result.Message ?? "ورود ناموفق بود.");
+            }
+        }
+        return View(model);
+
+    }
+    #endregion
+
+    #region LockOut
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LogOut()
+    {
+        await _authService.LogoutAsync();
+        return RedirectToAction("Index", "Home");
+    }
+
+    #endregion
 }
