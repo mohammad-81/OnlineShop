@@ -34,10 +34,8 @@ namespace OnlineShop.Application.DTOs.SiteSide.AuthDto
         public string Mobile { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-
         [DataType(DataType.Password)]
-        public string password { get; set; }
+        public string Password { get; set; }
 
 
         [Display(Name = "Remember me?")]
@@ -49,14 +47,5 @@ namespace OnlineShop.Application.DTOs.SiteSide.AuthDto
         public bool Succeeded { get; set; }
         public string? Message { get; set; }
         public IEnumerable<string>? Errors { get; set; }
-
-        public AuthUserDto? User { get; set; }
-    }
-
-    public class AuthUserDto
-    {
-        public string FullName { get; set; }
-        public string PhoneNumber { get; set; }
-
     }
 }

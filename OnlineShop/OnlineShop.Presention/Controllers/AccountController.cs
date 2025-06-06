@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using OnlineShop.Application.DTOs.SiteSide;
 using OnlineShop.Application.DTOs.SiteSide.AuthDto;
 using OnlineShop.Application.Services.Interfaces;
@@ -25,8 +26,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    
-    [ValidateAntiForgeryToken] // حتماً برای فرم‌های POST اضافه کنید
+    [ValidateAntiForgeryToken] 
     public async Task<IActionResult> Register(AuthRegisterDto model)
     {
         if (ModelState.IsValid)
@@ -34,14 +34,12 @@ public class AccountController : Controller
             var result = await _authService.RegisterAsync(model);
             if (result.Succeeded)
             {
-                TempData["SuccessMessage"] = "Registration successful! Please log in.";
+                TempData["SuccessMessage"] = "عملیات ثبت نام با موفقیت انجام شد .";
                 return RedirectToAction("Index","Home");
             }
+            else
+            ModelState.AddModelError(string.Empty, "عملیات ثبت نام با شکست مواجه شد.");
 
-            foreach (var error in result.Errors!) // Errors ممکن است null باشد
-            {
-                ModelState.AddModelError(string.Empty, error);
-            }
         }
         return View(model);
     }
@@ -50,7 +48,7 @@ public class AccountController : Controller
     #region Login 
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl) 
+    public async Task <IActionResult> Login(string? returnUrl) 
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View(new AuthLoginDto());
@@ -62,24 +60,35 @@ public class AccountController : Controller
     public async Task <IActionResult> Login(AuthLoginDto model,string? returnUrl=null)
     {
         ViewData["ReturnUrl"]= returnUrl;
-        if (ModelState.IsValid) 
+        if (ModelState.IsValid)
         {
             var result = await _authService.LoginAsync(model);
             if (result.Succeeded)
             {
                 if (Url.IsLocalUrl(returnUrl))
                 {
-                    Redirect(returnUrl);
+                    return Redirect(returnUrl);
                 }
-                RedirectToAction("Index", "Home");
-            }
-            foreach (var error in result.Errors!) { 
-                ModelState.AddModelError(string.Empty, error); 
+                return RedirectToAction("Index", "Home");
             }
 
-            if (result.Errors == null || !result.Errors.Any())
+            else
             {
-                ModelState.AddModelError(string.Empty, result.Message ?? "ورود ناموفق بود.");
+                if (result.Errors != null && result.Errors.Any())
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
+                else if (!string.IsNullOrEmpty(result.Message))
+                {
+                    ModelState.AddModelError(string.Empty, result.Message);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "ورود ناموفق بود. مشکلی پیش آمده است.");
+                }
             }
         }
         return View(model);

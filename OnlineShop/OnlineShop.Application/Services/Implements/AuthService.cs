@@ -30,7 +30,6 @@ namespace OnlineShop.Application.Services.Implements
 
         public async Task<AuthResponseDto> RegisterAsync(AuthRegisterDto model)
         {
-            // Fix for CS0023: Operator '-' cannot be applied to operand of type 'bool'
             var phoneExist =  await _userRepository.IsExistUserByMobile(model.Mobile);
             if (phoneExist)
             {
@@ -62,10 +61,8 @@ namespace OnlineShop.Application.Services.Implements
 
             return new AuthResponseDto
             {
-                Succeeded = false,
-                Errors = result.Errors.Select(e => e.Description),
-
-
+                Succeeded = false,                
+                Errors = result.Errors.Select(e => e.Description).ToList(),
                 Message = "عملیات ثبت نام با خطا مواجه شد ."
             };
 
@@ -79,24 +76,30 @@ namespace OnlineShop.Application.Services.Implements
                 {
                     Succeeded = false,
                     Message = "این شماره همراه وجود ندارد",
+                    Errors = new List<string> { "این شماره همراه وجود ندارد" }
 
                 };
             }
-            var result = await _signInManager.PasswordSignInAsync(user, model.password, isPersistent: false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                new AuthResponseDto
+                return new AuthResponseDto
                 {
-                    Succeeded = false,
-                    Message = "با موفقیت وارد شدید"
+                    Succeeded = true,
+                    Message = "با موفقیت وارد شدید",
+
                 };
             }
-
-            return new AuthResponseDto
+            else
             {
-                Succeeded = false,
-                Message = "رمز عبور یا شماره تلفن صحیح نیست"
-            };
+                return new AuthResponseDto
+                {
+                    Succeeded = false,
+                    Message = "رمز عبور یا شماره تلفن صحیح نیست",
+                    Errors = new List<string> { "نام کاربری یا رمز عبور اشتباه است." }
+
+                };
+            }
             
         }
 
