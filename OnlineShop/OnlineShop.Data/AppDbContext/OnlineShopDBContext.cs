@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Entitties;
 using OnlineShop.Domain.Entitties.Identity;
-using OnlineShop.Domain.Entitties.User;
 
 namespace OnlineShop.Data.AppDbContext;
 
@@ -17,10 +16,7 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser, Applicatio
 
     #region DbSets  
 
-    #region UserDbSet  
-    public DbSet<User> Users { get; set; }
 
-    #endregion
 
     #endregion
 

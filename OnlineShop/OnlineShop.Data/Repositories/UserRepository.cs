@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OnlineShop.Data.AppDbContext;
 using OnlineShop.Domain.Entitties;
-using OnlineShop.Domain.Entitties.User;
 using OnlineShop.Domain.IRepositories;
 using System;
 using System.Collections.Generic;
