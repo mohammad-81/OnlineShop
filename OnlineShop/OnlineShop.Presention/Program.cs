@@ -1,15 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using OnlineShop.Application.Services.Implements;
-using OnlineShop.Application.Services.Interfaces;
 using OnlineShop.Application.Services.Implements;
-
+using OnlineShop.Application.Services.Interfaces;
 using OnlineShop.Data.AppDbContext;
 using OnlineShop.Data.Repositories;
-using OnlineShop.Domain.IRepositories;
 using OnlineShop.Domain.Entitties;
 using OnlineShop.Domain.Entitties.Identity;
-using Microsoft.AspNetCore.Identity;
+using OnlineShop.Domain.IRepositories;
 
 
 
@@ -26,6 +26,7 @@ namespace OnlineShop.Presention
 
             builder.Services.AddScoped<IAuthService,AuthService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAuthorizationHandler,SuperAdminAutorizationHandlerService>();
             builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<OnlineShopDBContext>(options =>
@@ -58,6 +59,12 @@ namespace OnlineShop.Presention
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
                 options.SlidingExpiration = true;
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("requireAdmin", policy =>
+                    policy.RequireRole("Admin"));
             });
 
             var app = builder.Build();

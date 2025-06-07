@@ -12,4 +12,5 @@ public class ApplicationUser:IdentityUser<long>
     public string? FullName{ get; set; }
     public DateTime CreatedDate { get; set; }
     public bool IsDelete { get; set; }
+    public bool IsSuperAdmin { get; set; }
 }
