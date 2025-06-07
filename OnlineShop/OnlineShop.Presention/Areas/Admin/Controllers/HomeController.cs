@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace OnlineShop.Presention.Areas.Admin.Controllers
+namespace OnlineShop.Presention.Areas.Admin.Controllers;
+
+
+public class HomeController : AdminBaseController
 {
-    [Area("Admin")]
-    public class HomeController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }
