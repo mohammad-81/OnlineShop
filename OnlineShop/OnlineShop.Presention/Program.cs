@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using OnlineShop.Application.Services.Implements;
 using OnlineShop.Application.Services.Implements;
+using OnlineShop.Application.Services.Implements.AdminSide;
 using OnlineShop.Application.Services.Interfaces;
+using OnlineShop.Application.Services.Interfaces.AdminSide;
 using OnlineShop.Data.AppDbContext;
 using OnlineShop.Data.Repositories;
 using OnlineShop.Domain.Entitties;
@@ -26,6 +28,7 @@ namespace OnlineShop.Presention
 
             builder.Services.AddScoped<IAuthService,AuthService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAdminPanelService, AdminPanelService>();
             builder.Services.AddScoped<IAuthorizationHandler,SuperAdminAutorizationHandlerService>();
             builder.Services.AddRazorPages();
 

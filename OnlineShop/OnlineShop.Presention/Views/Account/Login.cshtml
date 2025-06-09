@@ -2,6 +2,9 @@
 
 @{
     Layout = null;
+    ViewData["Title"] = "ورود به حساب کاربری";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+
 }
 
 
@@ -54,7 +57,10 @@
                                 <div class="card login-page border-0" style="z-index: 1">
                                     <div class="card-body p-0">
                                         <h4 class="card-title text-center" style="font-family: yekanBakhtRegular;">وارد شدن </h4>
-                                        <form class="login-form mt-4" asp-action="Login" asp-controller="Account">
+
+                                        <form class="login-form mt-4" asp-action="Login" asp-controller="Account" asp-route-returnUrl="@returnUrl" method="post">
+
+                                            <input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" />  
                                             <div asp-validation-summary="All" class="text-danger"></div>
 
                                             <div class="row">

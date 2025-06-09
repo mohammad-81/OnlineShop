@@ -13,4 +13,6 @@ public class ApplicationUser:IdentityUser<long>
     public DateTime CreatedDate { get; set; }
     public bool IsDelete { get; set; }
     public bool IsSuperAdmin { get; set; }
+    public string? UserAvatar { get; set; }
+
 }
