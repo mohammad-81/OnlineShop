@@ -1,11 +1,11 @@
 ﻿@using OnlineShop.Application.Utillities;
-
 @model IEnumerable<OnlineShop.Application.DTOs.AdminSide.UserListDto>
+
 
 @{
     ViewData["Title"] = "مدیریت کاربران";
+    Layout = "_AdminLayout"; 
 }
-
 
 @section Styls
 {
@@ -120,11 +120,12 @@
                                     <thead>
                                         <tr role="row">
 
-                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="موبایل : activate to sort column ascending">عکس پروفایل </th>
-                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="نام کاربری  : activate to sort column descending">     نام کاربری</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عکس پروفایل : activate to sort column ascending">عکس پروفایل </th>
+                                            <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="نام کاربری  : activate to sort column descending"> نام کامل</th>
 
-                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="موبایل : activate to sort column ascending">موبایل </th>
-                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="موبایل : activate to sort column ascending">ثبت نام  </th>
+                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="موبایل : activate to sort column ascending"> نام کاربری - موبایل</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="نقش ها  : activate to sort column ascending"> نقش ها  </th>
+                                            <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ثبت نام  : activate to sort column ascending"> تاریخ ثبت نام  </th>
 
                                             <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending"></th>
                                         </tr>
@@ -134,7 +135,7 @@
                                         @foreach (var item in Model)
                                         {
                                             <tr role="row" class="odd" remove-ajax-item="@item.Id">
-                                           
+
                                                 <td>
                                                     @if (string.IsNullOrEmpty(item.UserAvatar))
                                                     {
@@ -147,29 +148,35 @@
                                                 </td>
                                                 <td>@item.FullName</td>
                                                 <td>@item.PhoneNumber</td>
+                                                <td>
+                                                    @foreach(var role in item.Roles)
+                                                    {
+                                                        @role <br/>
+                                                    }
+                                                </td>
                                                 <td>@item.CreatedDate.ToShamsi()</td>
 
                                                 <td>
 
                                                     <a class="btn btn-warning btn-sm waves-effect"
-                                                       asp-action="EditUser" 
-                                                       asp-area="Admin" 
-                                                       asp-controller="Users" 
+                                                       asp-action="EditUser"
+                                                       asp-area="Admin"
+                                                       asp-controller="Users"
                                                        asp-route-UserId="@item.Id">
                                                         <i class="glyphicon glyphicon-edit"></i>
                                                         ویرایش
                                                     </a>
 
-                                                    <a class="btn btn-info btn-sm waves-effect" 
+                                                    <a class="btn btn-info btn-sm waves-effect"
                                                        asp-action="DetailUser"
-                                                       asp-area="Admin" 
-                                                       asp-controller="Users" 
+                                                       asp-area="Admin"
+                                                       asp-controller="Users"
                                                        asp-route-UserId="@item.Id">
                                                         <i class="glyphicon glyphicon-edit"></i>
                                                         اطلاعات
                                                     </a>
 
-                                                    <button onclick="DeleteAjax(@item.Id, '@Url.Action("DeleteUser", "Users", new {area = "Admin", userId = item.Id})')" class="btn btn-danger btn-sm waves-effect">
+                                                    <button onclick="DeleteAjax(@item.Id, '@Url.Action("DeleteUser", "Users", new { area = "Admin", userId = item.Id })')" class="btn btn-danger btn-sm waves-effect">
                                                         <i class="glyphicon glyphicon-trash"></i>
                                                         حذف
                                                     </button>
@@ -183,13 +190,20 @@
                                             </tr>
                                         }
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <!-- /.card-body -->
                 </div>
+                <!-- /.card -->
             </div>
+            <!-- /.col -->
         </div>
-    </section> 
+        <!-- /.row -->
+    </section> <!-- /.content -->
 </div>
-kik
+
+
+
