@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.Data.AppDbContext;
 using OnlineShop.Domain.Entitties;
 using OnlineShop.Domain.IRepositories;
@@ -26,6 +27,11 @@ public class UserRepository : IUserRepository
     {
         var result = _userManager.Users.Any(x => x.PhoneNumber == mobile);
         return result;
+    }
+
+    public async Task<ApplicationUser> FindByPhoneNumberAsync(string phoneNumber)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
     }
     #endregion
 }

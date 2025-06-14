@@ -69,7 +69,8 @@ namespace OnlineShop.Application.Services.Implements
         }
         public async Task<AuthResponseDto> LoginAsync(AuthLoginDto model)
         {
-            var user = await _userManeger.FindByNameAsync(model.Mobile);
+            var user = await _userRepository.FindByPhoneNumberAsync(model.Mobile);
+
             if (user == null)
             {
                 return new AuthResponseDto
